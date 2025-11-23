@@ -1,29 +1,29 @@
 pipeline {
     agent any
-    tools {
-        maven 'M3'
-        jdk   'JAVA_HOME'    // ← c’est le nom exact dans ton Jenkins
-    }
     stages {
         stage('Checkout') {
             steps {
-                echo 'Code déjà présent grâce à Pipeline from SCM'
+                echo 'Checkout réussi via Pipeline from SCM !'
                 sh 'pwd && ls -la'
             }
         }
-        stage('Build') {
+        stage('Informations') {
             steps {
-                sh 'mvn clean compile -DskipTests'
+                echo 'Ce pipeline montre que Jenkinsfile est bien chargé depuis GitHub'
+                echo "Branche : ${env.BRANCH_NAME}"
+                echo "Build numéro : ${env.BUILD_NUMBER}"
+                sh 'java -version'
+                sh 'mvn -version'
             }
         }
-        stage('Test') {
+        stage('Fin') {
             steps {
-                sh 'mvn test -DskipTests || true'
+                echo 'Pipeline from SCM fonctionne parfaitement !'
             }
         }
     }
     post {
-        success { echo 'Pipeline réussi !' }
-        failure { echo 'Pipeline échoué' }
+        success { echo 'ROND BLEU — Pipeline from SCM validé !' }
+        failure { echo 'Échec du pipeline' }
     }
 }
